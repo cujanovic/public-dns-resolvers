@@ -6,11 +6,14 @@ on:
 
 jobs:
   build:
+    env:
+      TOKEN: ${{ secrets.GITHUB_TOKEN }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
       with:
-        token: ${{ secrets.GITHUB_PERSONAL_TOKEN }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
     - name: dnsvalidator
       run: |
         git clone https://github.com/vortexau/dnsvalidator
@@ -18,13 +21,15 @@ jobs:
         pip3 install wheel
         pip3 install setuptools
         sudo python3 setup.py install
-        rm ../resolvers.txt
-        dnsvalidator -tL https://raw.githubusercontent.com/janmasarik/resolvers/master/resolvers.txt -threads 5 -o ../resolvers.txt
-        sed -i '/^$/d' ../resolvers.txt
+        dnsvalidator -tL ../resolvers.txt -threads 5 -o ../resolvers-new.txt
+        dnsvalidator -tL https://public-dns.info/nameservers.txt -threads 5 -o ../resolvers-new.txt
+        sed '/^$/d' ../resolvers-new.txt > ../resolvers.txt
     - name: Commit resolvers.txt
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add resolvers.txt
-        git commit -m "Update resolvers" -a
-        git push "https://janmasarik:${{ secrets.GITHUB_PERSONAL_TOKEN }}@github.com/janmasarik/resolvers.git" HEAD:master --follow-tags
+        if [ $(git status --porcelain=v1 2>/dev/null | wc -l) != "0" ]; then
+            git add "${VERSION_FILE}"
+            git commit -m "Remote version change" -a
+            git push "https://${GITHUB_ACTOR}:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:${GITHUB_REF} --follow-tags
+        fi
