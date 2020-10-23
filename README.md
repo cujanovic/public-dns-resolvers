@@ -2,11 +2,13 @@
 Fresh list of periodically validated public DNS resolvers.
  
 ```bash
-$ wget https://raw.githubusercontent.com/janmasarik/resolvers/master/resolvers.txt
+$ wget https://raw.githubusercontent.com/phasip/resolvers/master/resolvers.txt
 $ massdns -r resolvers.txt domains_to_resolve.txt
 ```
 
 ## Why?
+This is a fork from janmasarik/resolvers to add more sources for the resolvers.txt list
+...
 People need a list of *good* resolvers (e.g. for [massdns](https://github.com/blechschmidt/massdns)). Why spend all that traffic on refreshing a private list? Let's use and improve this one! ᕕ( ᐛ )ᕗ
 
 ## How it's done 
