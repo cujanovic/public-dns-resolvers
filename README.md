@@ -5,7 +5,8 @@ Fresh list of periodically validated public DNS resolvers.
 $ wget https://raw.githubusercontent.com/phasip/resolvers/master/resolvers.txt
 $ massdns -r resolvers.txt domains_to_resolve.txt
 ```
-
+# resolvers-stable-grade-N.txt
+These files contain resolvers that have been available during the last N updates.
 ## Why?
 This is a fork from janmasarik/resolvers to add more sources for the resolvers.txt list
 ...
