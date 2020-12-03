@@ -23,10 +23,10 @@ jobs:
         sudo python3 setup.py install
         dnsvalidator -tL ../resolvers.txt -threads 5 -o ../resolvers-new.txt
         dnsvalidator -tL https://public-dns.info/nameservers.txt -threads 5 -o ../resolvers-new.txt
-        cat ../resolvers-new.txt ../resolvers-stable-grade2.txt | sort | uniq -d | sed '/^$/d' > ../resolvers-stable-grade3.txt
-        cat ../resolvers-new.txt ../resolvers-stable-grade1.txt | sort | uniq -d | sed '/^$/d' > ../resolvers-stable-grade2.txt
-        cat ../resolvers-new.txt ../resolvers.txt | sort | uniq -d | sed '/^$/d' > ../resolvers-stable-grade1.txt
-        sed '/^$/d' ../resolvers-new.txt > ../resolvers.txt
+        cat ../resolvers-new.txt ../resolvers-stable-grade2.txt | sort -R | uniq -d | sed '/^$/d' > ../resolvers-stable-grade3.txt
+        cat ../resolvers-new.txt ../resolvers-stable-grade1.txt | sort -R | uniq -d | sed '/^$/d' > ../resolvers-stable-grade2.txt
+        cat ../resolvers-new.txt ../resolvers.txt | sort -R | uniq -d | sed '/^$/d' > ../resolvers-stable-grade1.txt
+        sed '/^$/d' ../resolvers-new.txt | sort -R > ../resolvers.txt
     - name: Commit resolvers.txt
       run: |
         git config --local user.email "action@github.com"
