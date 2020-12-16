@@ -23,8 +23,7 @@ jobs:
         sudo python3 setup.py install
         dnsvalidator -tL ../resolvers.txt -threads 5 -o ../resolvers-new.txt
         dnsvalidator -tL https://public-dns.info/nameservers.txt -threads 5 -o ../resolvers-new.txt
-        cat ../resolvers-new.txt ../resolvers-stable-grade2.txt | sort -R | uniq -d | sed '/^$/d' > ../resolvers-stable-grade3.txt
-        cat ../resolvers-new.txt ../resolvers-stable-grade1.txt | sort -R | uniq -d | sed '/^$/d' > ../resolvers-stable-grade2.txt
+        for i in {10..1}; do cat ../resolvers-new.txt ../resolvers-stable-grade$i.txt | sort -R | uniq -d | sed '/^$/d' > ../resolvers-stable-grade$((i+1)).txt; done
         cat ../resolvers-new.txt ../resolvers.txt | sort -R | uniq -d | sed '/^$/d' > ../resolvers-stable-grade1.txt
         sed '/^$/d' ../resolvers-new.txt | sort -R > ../resolvers.txt
     - name: Commit resolvers.txt
@@ -33,9 +32,7 @@ jobs:
         git config --local user.name "GitHub Action"
         if [ $(git status --porcelain=v1 2>/dev/null | wc -l) != "0" ]; then
             git add "resolvers.txt"
-            git add "resolvers-stable-grade1.txt"
-            git add "resolvers-stable-grade2.txt"
-            git add "resolvers-stable-grade3.txt"
+            for i in {11..1}; do git add "resolvers-stable-grade$i.txt"; done
             git commit -m "Remote version change" -a
             git push "https://${GITHUB_ACTOR}:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:${GITHUB_REF} --follow-tags
         fi
